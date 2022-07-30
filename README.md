@@ -8,4 +8,4 @@
 
 ## Googlenet(Inception V1)
 
-## Resnet(预计2022.8.6)
+## Resnet(预计2022.8.13)
