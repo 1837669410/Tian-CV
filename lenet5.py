@@ -10,12 +10,12 @@ class Lenet5(keras.Model):
         self.model = keras.Sequential([
             # conv1 [None 32 32 3] -> [None 14 14 6]
             keras.layers.Conv2D(filters=6, kernel_size=[5,5], padding="valid", strides=1),
-            keras.layers.MaxPool2D(pool_size=[2,2], strides=2, padding="valid"),
             keras.layers.ReLU(),
+            keras.layers.MaxPool2D(pool_size=[2,2], strides=2, padding="valid"),
             # conv2 [None 14 14 6] -> [None 5 5 16]
             keras.layers.Conv2D(filters=16, kernel_size=[5, 5], padding="valid", strides=1),
-            keras.layers.MaxPool2D(pool_size=[2,2], strides=2, padding="valid"),
             keras.layers.ReLU(),
+            keras.layers.MaxPool2D(pool_size=[2,2], strides=2, padding="valid"),
             # Flatten: [None 5 5 16] -> [None 5*5*16]
             keras.layers.Flatten(),
             # fc [None 5*5*16] -> [None 10]
