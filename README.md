@@ -10,4 +10,6 @@
 
 ## Googlenet(Inception V1)
 
+## InceptionV2(完成2022.8.23)
+
 ## Resnet(预计2022.8.13)
