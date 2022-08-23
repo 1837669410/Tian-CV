@@ -2,10 +2,10 @@ import tensorflow as tf
 from tensorflow import keras
 from utils import set_soft_gpu, load_cifar10_datasets
 
-class Inception(keras.layers.Layer):
+class InceptionV1(keras.layers.Layer):
 
     def __init__(self, filters):
-        super(Inception, self).__init__()
+        super(InceptionV1, self).__init__()
         self.p1_1 = keras.layers.Conv2D(filters=filters[0], kernel_size=[1,1], strides=1, padding="same", activation="relu")
         self.p2_1 = keras.layers.Conv2D(filters=filters[1], kernel_size=[1,1], strides=1, padding="same", activation="relu")
         self.p2_3 = keras.layers.Conv2D(filters=filters[2], kernel_size=[3,3], strides=1, padding="same", activation="relu")
@@ -22,10 +22,10 @@ class Inception(keras.layers.Layer):
         out = tf.concat((out_1, out_2, out_3, out_4), axis=3)
         return out
 
-class GoogLenet(keras.Model):
+class GoogLenetV1(keras.Model):
 
     def __init__(self):
-        super(GoogLenet, self).__init__()
+        super(GoogLenetV1, self).__init__()
 
         self.stage1 = keras.Sequential([
             # [None 32 32 3] -> [None 32 32 64] -> [None 16 16 64]
@@ -40,23 +40,23 @@ class GoogLenet(keras.Model):
         ])
         self.stage3 = keras.Sequential([
             # [None 8 8 192] -> [None 8 8 256] -> [None 8 8 480] -> [None 4 4 480]
-            Inception([64, 96, 128, 16, 32, 32]),
-            Inception([128, 128, 192, 32, 96, 64]),
+            InceptionV1([64, 96, 128, 16, 32, 32]),
+            InceptionV1([128, 128, 192, 32, 96, 64]),
             keras.layers.MaxPool2D(pool_size=[3,3], strides=2, padding="same"),
         ])
         self.stage4 = keras.Sequential([
             # [None 4 4 480] -> [None 4 4 512] -> [None 4 4 512] -> [None 4 4 512] -> [None 4 4 528] -> [None 4 4 832] -> [None 2 2 832]
-            Inception([192, 96, 208, 16, 48, 64]),
-            Inception([160, 112, 224, 24, 64, 64]),
-            Inception([128, 128, 256, 24, 64, 64]),
-            Inception([112, 144, 288, 32, 64, 64]),
-            Inception([256, 160, 320, 32, 128, 128]),
+            InceptionV1([192, 96, 208, 16, 48, 64]),
+            InceptionV1([160, 112, 224, 24, 64, 64]),
+            InceptionV1([128, 128, 256, 24, 64, 64]),
+            InceptionV1([112, 144, 288, 32, 64, 64]),
+            InceptionV1([256, 160, 320, 32, 128, 128]),
             keras.layers.MaxPool2D(pool_size=[3,3], strides=2, padding="same"),
         ])
         self.stage5 = keras.Sequential([
             # [None 2 2 832] -> [None 2 2 832] -> [None 2 2 1024] -> [None 1 1 1024] -> [None 1024]
-            Inception([256, 160, 320, 32, 128, 128]),
-            Inception([384, 192, 384, 48, 128, 128]),
+            InceptionV1([256, 160, 320, 32, 128, 128]),
+            InceptionV1([384, 192, 384, 48, 128, 128]),
             keras.layers.GlobalAvgPool2D(),
             keras.layers.Flatten(),
         ])
@@ -79,7 +79,7 @@ class GoogLenet(keras.Model):
 def train():
     set_soft_gpu(True)
     dbtrain, dbtest = load_cifar10_datasets(128)
-    model = GoogLenet()
+    model = GoogLenetV1()
     model.build(input_shape=[None, 32, 32, 3])
     model.summary()
     for e in range(10):
